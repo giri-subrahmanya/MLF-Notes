@@ -1,6 +1,9 @@
 function load(path, element) {
   const container = document.getElementById("content");
+  
+  // Reset scroll offsets for both desktop pane and mobile window layout
   container.scrollTop = 0;
+  window.scrollTo(0, 0);
 
   clearActiveStates();
   if (element) {
@@ -8,25 +11,33 @@ function load(path, element) {
   } else {
     const buttons = document.querySelectorAll(".nav-btn");
     buttons.forEach(btn => {
-      if (btn.getAttribute("onclick").includes(path)) {
+      if (btn.getAttribute("onclick") && btn.getAttribute("onclick").includes(path)) {
         btn.classList.add("active");
       }
     });
   }
 
-// Append parameters to hide tools AND force horizontal fitting
-const cleanPdfPath = `${path}#toolbar=0&navpanes=0&view=FitH`;
+  // Append parameters to hide tools AND force horizontal fitting
+  const cleanPdfPath = `${path}#toolbar=0&navpanes=0&view=FitH`;
 
   container.innerHTML = `
-<div class="note-page-content" style="height: 100%; width: 70%; margin: 0 auto; display: flex; flex-direction: column;">
+    <div class="note-page-content">
       <iframe 
         src="${cleanPdfPath}" 
         type="application/pdf" 
         width="100%" 
         style="border: none; flex-grow: 1; min-height: 85vh;">
-      </iframe>
+       iframe>
     </div>
   `;
+
+  // Automatically collapse the mobile menu navigation drawer after clicking a note selection
+  const nav = document.getElementById("sidebar-nav");
+  const toggle = document.getElementById("menu-toggle");
+  if (nav.classList.contains("mobile-open")) {
+    nav.classList.remove("mobile-open");
+    toggle.classList.remove("active");
+  }
 }
 
 function clearActiveStates() {
@@ -36,6 +47,7 @@ function clearActiveStates() {
 function home() {
   clearActiveStates();
   const container = document.getElementById("content");
+  window.scrollTo(0, 0);
 
   container.innerHTML = `
     <div class="home">
@@ -128,7 +140,29 @@ function home() {
         </footer>
     </div>
   `;
+
+  // Auto close mobile drawer menu if clicking home brand logo
+  const nav = document.getElementById("sidebar-nav");
+  const toggle = document.getElementById("menu-toggle");
+  if (nav && nav.classList.contains("mobile-open")) {
+    nav.classList.remove("mobile-open");
+    toggle.classList.remove("active");
+  }
 }
+
+// Mobile Navbar Hamburger Setup Runtime Listener
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleBtn = document.getElementById("menu-toggle");
+  const navMenu = document.getElementById("sidebar-nav");
+  
+  if (toggleBtn && navMenu) {
+    toggleBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle("mobile-open");
+      toggleBtn.classList.toggle("active");
+    });
+  }
+});
 
 // Initial load
 home();

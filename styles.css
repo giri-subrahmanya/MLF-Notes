@@ -43,11 +43,15 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  z-index: 100;
 }
 
 .sidebar-header {
   padding: 24px 20px;
   border-bottom: 1px solid var(--border-sidebar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
@@ -100,14 +104,44 @@ body {
   box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
 }
 
-/* MAIN CONTENT AREA - EXPANDED WIDTH */
+/* Hamburger toggle hidden on Desktop */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-toggle .bar {
+  height: 3px;
+  width: 100%;
+  background-color: var(--text-main);
+  border-radius: 10px;
+  transition: all 0.25s ease;
+}
+
+/* MAIN CONTENT AREA */
 .content {
   flex: 1;
   padding: 40px 5%;
   overflow-y: auto;
-  overflow-x: hidden; /* Prevents the main viewport from breaking horizontally */
+  overflow-x: hidden;
   width: 100%;
-  min-width: 0;       /* CRITICAL: Allows flex items to shrink below their contents when zooming */
+  min-width: 0;
+}
+
+/* PDF Content Sheet Wrapper */
+.note-page-content {
+  height: 100%;
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 /* CONTENT HERO SECTIONS */
@@ -134,7 +168,6 @@ body {
   line-height: 1.65;
 }
 
-/* Callout Box wrapper for the disclaimer note */
 .note {
   font-size: 15px;
   color: var(--text-muted);
@@ -152,13 +185,11 @@ body {
   padding: 1px;
 }
 
-/* main container */
 .card-grid {
   width: 100%;
   max-width: 1100px;
 }
 
-/* each row is centered now */
 .card-row {
   display: flex;
   justify-content: center;
@@ -167,23 +198,18 @@ body {
   flex-wrap: nowrap;
 }
 
-/* card is now fixed size so everything stays consistent */
 .card {
   width: 240px;
   min-height: 95px;
-
   background: #187ab7;
   border: 1px solid rgba(148, 163, 184, 0.15);
   border-radius: 14px;
   padding: 22px;
-
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-
   transition: all 0.25s ease;
   box-shadow: 0 8px 20px rgba(2, 6, 23, 0.25);
 }
@@ -195,7 +221,6 @@ body {
   color: #e5e7eb;
 }
 
-/* hover effect */
 .card:hover {
   transform: translateY(-6px);
   border-color: rgba(59, 130, 246, 0.5);
@@ -229,15 +254,104 @@ body {
 }   
 
 .site-footer {
-    margin-top: 20px;
-    padding: 20px;
+  margin-top: 20px;
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.55);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  background: transparent;
+}
 
-    text-align: center;
+/* ==========================================================================
+   RESPONSIVE DESIGN RULES (Mobile Devices Less Than 768px Width)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Stack Layout Viewport Elements Vertically */
+  .layout {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
 
-    font-size: 18px;
-    color: rgba(0, 0, 0, 0.55);
+  /* Make Sidebar transform into a sticky Top Header Nav Bar */
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    position: sticky;
+    top: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-sidebar);
+  }
 
-    border-top: 1px solid rgba(148, 163, 184, 0.2);
+  .sidebar-header {
+    padding: 12px 16px;
+  }
 
-    background: transparent;
+  .brand-btn {
+    width: auto;
+    font-size: 20px;
+    padding: 6px 14px;
+  }
+
+  /* Show Hamburger toggle trigger on Mobile Viewport */
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* Morph icon to X when opened */
+  .menu-toggle.active .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .menu-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* Collapsible Dropdown Panel Drawer Logic */
+  .nav {
+    display: none;
+    width: 100%;
+    max-height: 75vh;
+    padding: 8px 16px;
+    background-color: var(--bg-sidebar);
+    border-top: 1px solid var(--border-sidebar);
+  }
+
+  /* Class toggled via JS runtime to show/hide menu */
+  .nav.mobile-open {
+    display: block;
+  }
+
+  /* Adjust Main Content view properties underneath sticky header */
+  .content {
+    padding: 24px 16px;
+    overflow-y: visible;
+    height: auto;
+  }
+
+  /* Allow Card Rows to drop and wrap cleanly */
+  .card-row {
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    width: 100%; /* Cards stretch to take up horizontal full-width on mobile phones */
+    min-height: 80px;
+    padding: 16px;
+  }
+
+  /* Expand iframe document viewer to use full mobile viewport width safely */
+  .note-page-content {
+    width: 100%;
+  }
+
+  .home h1 {
+    font-size: 28px;
+  }
 }
